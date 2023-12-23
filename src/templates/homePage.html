@@ -1,0 +1,342 @@
+<style>
+    .App {
+        text-align: center;
+    }
+
+    @font-face{
+        font-family: Smooth Circular;
+        src: url('static/fonts/Smooth Circulars.otf') format('opentype');
+        font-weight: bold;}
+
+
+    body {
+        background-color: #191414;
+        color: white;
+        margin-top, margin-left, margin-right: 0;
+        margin-bottom: 10px;
+        padding-top: 40px;
+        font-family: 'Verdana', sans-serif;
+
+    }
+
+    .button {
+        float:right;
+        display: inline-block;
+        padding: 20px 20px;
+        background-color: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        vertical-align: middle;
+    }
+
+    .submit_button {
+        display: inline-block;
+        padding: 10px;
+        background-color: #1DB954;
+        color: #fff;
+        aspect-ratio: 1 / 1;
+        width: auto;
+        text-decoration: none;
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+
+
+    .App-header {
+        background-color: #191414;
+        margin-top: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: calc(10px + 2vmin);
+        color: white;
+    }
+
+    .table-container {
+        text-align: center; /* Optional: Center the buttons */
+    }
+
+    table {
+        display: inline-block;
+        vertical-align: top;
+        margin: 20px;
+    }
+
+    td {
+        border: 1px solid black;
+        width: 250px;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 25px;
+    }
+
+    .authentication_container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 5px;
+        width: 100%;
+        background-color: #1DB954; /* Set the background color of the banner */
+        color: #fff; /* Set the text color of the banner */
+              display: flex;
+            align-items: center;
+
+    }
+
+    .search_box {
+        background-color: #242424;
+        border: 0;
+        border-radius: 500px;
+        color: #fff!important;
+        height: 48px;
+        width: auto;
+        padding: 6px 36px;
+        text-overflow: ellipsis;
+    }
+
+     tbody {
+            max-height: 350px; /* Set the maximum height for the table body */
+            overflow-y: auto; /* Enable vertical scrollbar if needed */
+            display: block; /* Allow the tbody to have its own block formatting context */
+        }
+
+    tbody::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    tbody::-webkit-scrollbar-thumb {
+        background-color: #1DB954;
+        border-radius: 6px;
+    }
+
+    tbody::-webkit-scrollbar-track {
+        background-color: #000;
+        border-radius: 6px;
+    }
+
+    a {
+        color:  #1DB954
+    }
+
+    .playlist_tile:hover {
+        background-color: #000
+    }
+
+    .playlist_tile, .song_tile {
+        width: 200px;
+        height: 70px;
+        border-radius: 15px;
+        padding: 36px;
+        background-color: #181818;
+        text-overflow: ellipsis;
+    }
+
+    .left-container {
+        margin-left: auto;
+        display: flex;
+        justify-content: flex-end; /* Align items to the right */
+        align-items: center; /* Center items vertically */
+        margin-right: 20px;
+    }
+
+    .radio_button {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        text-align: left;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 18px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default radio button */
+    .radio_button input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* Create a custom radio button */
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 25px;
+      width: 25px;
+      background-color: #303030;
+      border-radius: 50%;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .radio_button:hover input ~ .checkmark {
+      background-color: #1DB954;
+    }
+
+    .radio_button input:checked ~ .checkmark {
+      background-color: #1DB954;
+    }
+
+    .center-div {
+        display: inline-block; /* Make the div an inline-block element */
+        text-align: left; /* Reset text-align for the content inside the div */
+        padding: 20px; /* Add padding as needed */
+    }
+
+
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    /* Show the indicator (dot/circle) when checked */
+    .radio_button input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    /* Style the indicator (dot/circle) */
+    .radio_button .checkmark:after {
+        top: 9px;
+        left: 9px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #000;
+    }
+
+</style>
+
+<!DOCTYPE html>
+<html lang="en" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Cleansify</title>
+    </head>
+    <body>
+        <div class="App">
+            <header class="App-header">
+              <h3> Automatically swap out clean versions of explicit songs in Spotify playlists. </h3>
+            </header>
+            <div class="authentication_container">
+                <h1 style="margin-left:20px; color:#000;font-family: Smooth Circular;">CLEANSIFY</h1>
+                <div class="left-container">
+                    {% if userId %}
+                    <p class="left" style="margin-right: 20px; color:#000; font-weight: bold">Logged in as {{userId}}</p>
+                    <a href="/logout" class="button left">Logout of Spotify</a>
+                    {% else %}
+                    <a href="/login" class="button left">Login to Spotify</a>
+                    {% endif %}
+                </div>
+            </div>
+            <form method="POST" >
+                <input class="search_box" placeholder="URL of playlist to cleansify" type="text" id="url" name="url">
+                <button class="submit_button" type="submit">Go</button>
+            </form>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>My playlists</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% if userPlaylists %}
+                      {% for track in userPlaylists['items'] %}
+                        <tr class="playlist_tile">
+                            <td><a href="/?url={{track['external_urls']['spotify']}}"> {{track['name']}}</a></td>
+                       </tr>
+                      {% endfor %}
+                  {% endif %}
+                </tbody>
+              </table>
+                <table>
+                  <thead>
+                      <tr>
+                        <th>Songs in selected playlist</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  {% if tracks %}
+                      {% for track in tracks['tracks']['items'] %}
+                        <tr class="song_tile">
+                            <td>{{track['track']['name']}}</td>
+                       </tr>
+                      {% endfor %}
+                  {% endif %}
+                  </tbody>
+                </table>
+                <table>
+                  <thead>
+                      <tr>
+                        <th>Cleaned Songs in selected playlist</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  {% if cleaned %}
+                      {% for track in cleaned %}
+                        <tr style="background-color: {{track['certainty']|certainty_color}}" class="track-element song_tile" data-id="{{track['id']}}">
+                            <td>{{track['name']}}</td>
+                       </tr>
+                      {% endfor %}
+                  {% endif %}
+                  </tbody>
+                </table>
+            </div>
+            {% if cleaned and userId%}
+            <form action="/cleansify" method="POST" id="playlist_form" style="margin-bottom: 30px;">
+                <label style="font-weight:700" for="playlist_name">Cleansified playlist title:       </label>
+                <input class="search_box" value="{{tracks['name']}} (Cleansified)" type="text" id="playlist_name" name="playlist_name">
+                <div class="center-div">
+                    <label style="display: block; margin-top: 20px" class="radio_button">
+                        <input type="radio" id="private_playlist" value="private_playlist" name="playlist_type" checked>
+                        <span class="checkmark"></span>
+                        Private playlist
+                    </label>
+                    <br>
+                    <label style="display: block; margin-bottom: 20px;" class="radio_button">
+                        <input type="radio" id="public_playlist" value="public_playlist" name="playlist_type">
+                        <span class="checkmark"></span>
+                        Public Playlist
+                    </label>
+                </div>
+                <button class="submit_button" type="submit" id="gatherIds" style="margin-bottom: 50px;">Create</button>
+            </form>
+            {% endif %}
+        </div>
+        <script>
+            document.getElementById('gatherIds').addEventListener('click', function(event) {
+                console.log('button clicked!')
+                event.preventDefault();
+
+                var trackIds = [];
+                var trackElements = document.querySelectorAll('.track-element[data-id]');
+                trackElements.forEach(function(element) {
+                    trackIds.push(element.getAttribute('data-id'));
+                });
+
+                var trackIdsInput = document.createElement('input');
+                trackIdsInput.type = 'hidden';
+                trackIdsInput.name = 'track_ids';
+                trackIdsInput.value = JSON.stringify(trackIds);
+                document.querySelector('form#playlist_form').appendChild(trackIdsInput);
+
+                var userIdInput = document.createElement('input');
+                userIdInput.type = 'hidden';
+                userIdInput.name = 'user';
+                userIdInput.value = '{{userId}}';
+                document.querySelector('form#playlist_form').appendChild(userIdInput);
+
+                document.querySelector('form#playlist_form').submit();
+            });
+        </script>
+    </body>
+</html>
