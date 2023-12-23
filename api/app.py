@@ -83,13 +83,14 @@ def hello_world():
 
     if request.method == 'POST' or request.args.get('url'):
         playlist_url = request.form.get('url') if request.method == 'POST' else request.args.get('url')
-        if 'spotify_token' not in session:
-            headers = authorize(CLIENT_ID, CLIENT_SECRET)
-        else:
-            headers = session['spotify_token']
-        playlist_tracks = grab_playlist_by_url(playlist_url, headers)
-        cleaned_tracks = copy.deepcopy(playlist_tracks)
-        clean_tracks = clean_up_list(headers, cleaned_tracks)
+        if re.match(r"https://open\.spotify\.com/playlist/[\w-]+", playlist_url) is not None:
+            if 'spotify_token' not in session:
+                headers = authorize(CLIENT_ID, CLIENT_SECRET)
+            else:
+                headers = session['spotify_token']
+            playlist_tracks = grab_playlist_by_url(playlist_url, headers)
+            cleaned_tracks = copy.deepcopy(playlist_tracks)
+            clean_tracks = clean_up_list(headers, cleaned_tracks)
 
     return render_template("homePage.html", tracks=playlist_tracks, cleaned=clean_tracks, userPlaylists=myPlaylists,
                            userId=userid)
