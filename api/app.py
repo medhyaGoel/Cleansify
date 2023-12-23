@@ -3,7 +3,6 @@ import os
 import gunicorn
 from datetime import timedelta
 from flask import Flask, redirect, render_template, session, url_for, jsonify
-from flask_cors import CORS
 from main import *
 from dotenv import load_dotenv
 
@@ -11,7 +10,9 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET")
-CORS(app)
+# from flask_cors import CORS
+#
+# CORS(app)
 
 CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
