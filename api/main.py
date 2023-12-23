@@ -106,7 +106,8 @@ def grab_playlist_by_url(playlist_url, header):
 
 def fetch_profile(headers):
     response = requests.get(SPOTIFY_PROFILE_URL, headers=headers)
-    return response.json()
+    return response.json() if response.status_code == 200 else None
+
 
 
 # create clean version of playlist

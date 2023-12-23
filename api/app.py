@@ -77,13 +77,14 @@ def hello_world():
 
     if 'spotify_token' in session:
         my_profile = fetch_profile(session['spotify_token'])
-        userid = my_profile['display_name']
-        myPlaylists = get_user_playlists(my_profile, session['spotify_token'])
+        if my_profile is not None:
+            userid = my_profile['display_name']
+            myPlaylists = get_user_playlists(my_profile, session['spotify_token'])
 
     if request.method == 'POST' or request.args.get('url'):
         playlist_url = request.form.get('url') if request.method == 'POST' else request.args.get('url')
         if 'spotify_token' not in session:
-            access_token, headers = authorize(CLIENT_ID, CLIENT_SECRET)
+            headers = authorize(CLIENT_ID, CLIENT_SECRET)
         else:
             headers = session['spotify_token']
         playlist_tracks = grab_playlist_by_url(playlist_url, headers)
