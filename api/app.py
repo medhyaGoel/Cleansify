@@ -102,7 +102,7 @@ def hello_world():
 def create_playlist():
     if request.method == 'POST':
         track_ids = request.form.getlist('track_ids')
-        playlist_name = request.form.get('playlist_name') if request.form.get('playlist_name') is not '' else "Cleansified"
+        playlist_name = request.form.get('playlist_name') if request.form.get('playlist_name') != '' else "Cleansified"
         isPublic = False if request.form.get('playlist_type') == "private_playlist" else True
         my_profile = fetch_profile(session['spotify_token'])
         user_name = my_profile['id']
