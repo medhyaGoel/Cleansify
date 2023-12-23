@@ -1,5 +1,6 @@
 import copy
 import os
+import gunicorn
 from datetime import timedelta
 from flask import Flask, redirect, render_template, session, url_for, jsonify
 from flask_cors import CORS
@@ -129,5 +130,6 @@ def logout():
 # main()
 # _______________
 # Setting up host and port
-# if __name__ == "__main__":
-#     app.run(host='0.0.0.0', port=8081)
+if __name__ == "__main__":
+    app.run(debug=False)
+    # app.run(host='0.0.0.0', port=8081)
