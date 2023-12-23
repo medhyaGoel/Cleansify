@@ -14,6 +14,7 @@ CORS(app)
 
 CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+REDIRECT_URI = os.getenv("REDIRECT_URI") + "callback/q"
 
 # Set session timeout to 30 minutes
 app.permanent_session_lifetime = timedelta(minutes=30)
@@ -31,7 +32,7 @@ def clear_session():
 @app.route("/login")
 def index():
     # Authorization
-    response = app_Authorization(CLIENT_ID)
+    response = app_Authorization(CLIENT_ID, REDIRECT_URI)
     return redirect(response)
 
 
@@ -39,7 +40,7 @@ def index():
 @app.route("/callback/q")
 def callback():
     # verifier = request.args.get('verifier')
-    authorization_header = user_Authorization(CLIENT_ID, CLIENT_SECRET)
+    authorization_header = user_Authorization(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
     session['spotify_token'] = authorization_header
     return redirect(url_for('hello_world'))
 
@@ -128,5 +129,5 @@ def logout():
 # main()
 # _______________
 # Setting up host and port
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8081)
+# if __name__ == "__main__":
+#     app.run(host='0.0.0.0', port=8081)

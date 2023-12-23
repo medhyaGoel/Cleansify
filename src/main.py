@@ -17,7 +17,6 @@ SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 SPOTIFY_PROFILE_URL = "https://api.spotify.com/v1/me"
 
 # Server-side Parameters
-REDIRECT_URI = "http://localhost:8081/callback/q"
 SCOPE = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative playlist-modify-public ' \
         'playlist-modify-private'
 STATE = ""
@@ -52,13 +51,13 @@ def create_new_playlist(user_name, track_ids, token, isPublic, playlist_name):
 
 
 # Authorization of application with spotify
-def app_Authorization(client_id):
+def app_Authorization(client_id, redirect_uri):
 
     state = secrets.token_urlsafe(16)
 
     auth_query_parameters = {
         "response_type": "code",
-        "redirect_uri": REDIRECT_URI,
+        "redirect_uri": redirect_uri,
         "client_id": client_id,
         "scope": SCOPE,
         "state": state
@@ -72,7 +71,7 @@ def app_Authorization(client_id):
 
 
 # User has allowed us to access their spotify
-def user_Authorization(client_id, client_secret):
+def user_Authorization(client_id, client_secret, redirect_uri):
     auth_token = request.args['code']
     if not auth_token:
         app_Authorization(client_id)
@@ -80,7 +79,7 @@ def user_Authorization(client_id, client_secret):
         code_payload = {
             "grant_type": "authorization_code",
             "code": str(auth_token),
-            "redirect_uri": REDIRECT_URI
+            "redirect_uri": redirect_uri
         }
         base64encoded = base64.b64encode((client_id + ":" + client_secret).encode("ascii")).decode("ascii")
         headers = {'content-type': 'application/x-www-form-urlencoded',
