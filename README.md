@@ -10,3 +10,9 @@ To run locally...
 2. Create .env file and update appropriate redirect uri (this value should be "localhost:port_number" without the quotes), client id, client secret, and app secret values as chosen in previous step.
 3. Run server.
 4. Access the site at localhost:port_number
+
+
+
+Resources that helped me: 
+1. Darrell Flood's cool font
+2. [Ben Bellerose's]([url](https://github.com/bellerb/Spotify_Flask/)https://github.com/bellerb/Spotify_Flask/) Spotify authentication example
